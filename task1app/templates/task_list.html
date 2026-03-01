@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Tasks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 600px;
+            margin: 40px auto;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .btn {
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .badge-success { background: #28a745; color: white; }
+        .badge-secondary { background: #6c757d; color: white; }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .messages {
+            margin-bottom: 15px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="top-bar">
+        <h2>My Tasks</h2>
+        <a href="{% url 'task_create' %}" class="btn btn-primary">+ Add Task</a>
+    </div>
+
+    {% if tasks %}
+        {% for task in tasks %}
+            <div class="card">
+                <h3>
+                    {% if task.is_completed %}
+                        <s>{{ task.title }}</s>
+                    {% else %}
+                        {{ task.title }}
+                    {% endif %}
+                </h3>
+
+                {% if task.description %}
+                    <p>{{ task.description }}</p>
+                {% endif %}
+
+                {% if task.due_date %}
+                    <p><strong>Due:</strong> {{ task.due_date }}</p>
+                {% endif %}
+
+                <p>
+                    Status:
+                    {% if task.is_completed %}
+                        <span class="badge badge-success">Completed</span>
+                    {% else %}
+                        <span class="badge badge-secondary">Pending</span>
+                    {% endif %}
+                </p>
+
+                <a href="{% url 'task_toggle' task.id %}" class="btn btn-success">Toggle</a>
+                <a href="{% url 'task_update' task.id %}" class="btn btn-warning">Edit</a>
+                <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">Delete</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card">
+            <p>No tasks yet. Start by adding one.</p>
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
